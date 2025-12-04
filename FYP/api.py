@@ -6,12 +6,17 @@ from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv, find_dotenv
 
-# LangChain & AI Imports
+# =============================
+# ✅ FIXED IMPORTS (No more langchain_classic)
+# =============================
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.tools import tool
-from langchain_classic.agents import create_tool_calling_agent, AgentExecutor
+# Fixed: Import from standard langchain, not classic
+from langchain.agents import create_tool_calling_agent, AgentExecutor
+from langchain.chains import create_retrieval_chain
+from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_google_genai import ChatGoogleGenerativeAI
 from sentence_transformers import SentenceTransformer, util
 from langchain_core.messages import HumanMessage, AIMessage 
@@ -26,7 +31,7 @@ app = FastAPI()
 # Allow React to connect
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"], 
+    allow_origins=["http://localhost:3000", "https://your-react-app.netlify.app"], # Add your Netlify URL here later
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
