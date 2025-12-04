@@ -1,157 +1,182 @@
 // src/pages/patient/Diagnosis.js
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-// ✅ IMPORTING ONLY SAFE, STANDARD ICONS
 import { 
-  FaUserMd, FaArrowRight, FaStethoscope, FaThermometerThreeQuarters, 
-  FaHeartbeat, FaTooth, FaEye, FaBone, FaBrain, FaAllergies, 
-  FaWind, FaDeaf, FaWalking, FaMedkit, FaWeight, FaDizzy
+  FaPaperPlane, FaUserMd, FaRobot, FaStethoscope,
+  FaHeadSideVirus, FaHeartbeat, FaTooth, FaRunning 
 } from "react-icons/fa";
 
 const styles = {
-  container: { padding: "40px 20px", maxWidth: "900px", margin: "0 auto", fontFamily: "sans-serif", textAlign: "center" },
-  header: { marginBottom: "40px" },
-  title: { fontSize: "2.5rem", color: "#333", marginBottom: "10px" },
-  subtitle: { color: "#666", fontSize: "1.1rem" },
+  container: { maxWidth: "800px", margin: "30px auto", fontFamily: "sans-serif", display: "flex", flexDirection: "column", height: "85vh", border: "1px solid #ddd", borderRadius: "12px", overflow: "hidden", backgroundColor: "white", boxShadow: "0 10px 30px rgba(0,0,0,0.1)" },
   
-  // Card Grid
-  grid: { 
-    display: "grid", 
-    gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", 
-    gap: "20px", 
-    marginTop: "30px" 
-  },
-  symptomCard: (isSelected) => ({
-    padding: "20px", 
-    borderRadius: "15px", 
-    border: isSelected ? "2px solid #007bff" : "1px solid #eee",
-    backgroundColor: isSelected ? "#e3f2fd" : "white", 
-    cursor: "pointer", 
-    transition: "transform 0.2s, box-shadow 0.2s",
-    boxShadow: "0 4px 6px rgba(0,0,0,0.05)",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    gap: "10px",
-    color: isSelected ? "#007bff" : "#555"
-  }),
-  icon: { fontSize: "30px", marginBottom: "5px" },
+  // Header
+  header: { padding: "20px", backgroundColor: "#007bff", color: "white", display: "flex", alignItems: "center", gap: "15px" },
+  title: { margin: 0, fontSize: "1.2rem" },
+  subtitle: { margin: 0, fontSize: "0.9rem", opacity: 0.8 },
 
-  // Result Section
-  resultBox: { marginTop: "50px", padding: "40px", backgroundColor: "#d4edda", borderRadius: "15px", border: "1px solid #c3e6cb", boxShadow: "0 10px 20px rgba(0,0,0,0.1)" },
-  recommendation: { fontSize: "2rem", fontWeight: "bold", color: "#155724", margin: "15px 0" },
-  btnAction: {
-    marginTop: "20px", padding: "15px 30px", backgroundColor: "#007bff", color: "white", 
-    border: "none", borderRadius: "30px", fontSize: "18px", fontWeight: "bold", cursor: "pointer",
-    display: "inline-flex", alignItems: "center", gap: "10px",
-    boxShadow: "0 4px 10px rgba(0,123,255,0.3)"
+  // Chat Area
+  chatBox: { flex: 1, padding: "20px", overflowY: "auto", backgroundColor: "#f4f7f6", display: "flex", flexDirection: "column", gap: "15px" },
+  
+  // Messages
+  messageRow: (isBot) => ({ display: "flex", justifyContent: isBot ? "flex-start" : "flex-end" }),
+  bubble: (isBot) => ({
+    maxWidth: "70%", padding: "12px 16px", borderRadius: "12px", lineHeight: "1.5", fontSize: "15px",
+    backgroundColor: isBot ? "white" : "#007bff", 
+    color: isBot ? "#333" : "white",
+    borderTopLeftRadius: isBot ? "0" : "12px",
+    borderTopRightRadius: isBot ? "12px" : "0",
+    boxShadow: "0 2px 5px rgba(0,0,0,0.05)"
+  }),
+
+  // Input Area
+  inputArea: { padding: "20px", backgroundColor: "white", borderTop: "1px solid #eee" },
+  quickChips: { display: "flex", gap: "10px", overflowX: "auto", paddingBottom: "15px", marginBottom: "10px" },
+  chip: { padding: "8px 15px", borderRadius: "20px", backgroundColor: "#e3f2fd", color: "#007bff", border: "none", cursor: "pointer", whiteSpace: "nowrap", fontSize: "13px", fontWeight: "600", display: "flex", alignItems: "center", gap: "5px" },
+  inputRow: { display: "flex", gap: "10px" },
+  input: { flex: 1, padding: "12px", borderRadius: "25px", border: "1px solid #ddd", outline: "none", fontSize: "16px" },
+  sendBtn: { width: "50px", height: "50px", borderRadius: "50%", backgroundColor: "#007bff", color: "white", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" },
+
+  // Action Button inside Chat
+  bookButton: {
+    marginTop: "10px", display: "inline-block", padding: "10px 20px", backgroundColor: "#28a745", color: "white", 
+    borderRadius: "5px", textDecoration: "none", fontSize: "14px", fontWeight: "bold", cursor: "pointer", border: "none"
   }
 };
 
-// 🩺 Knowledge Base (Using Safe Icons)
-const symptomList = [
-  { name: "Headache", icon: <FaDizzy /> }, 
-  { name: "Fever", icon: <FaThermometerThreeQuarters /> },
-  { name: "Chest Pain", icon: <FaHeartbeat /> },
-  { name: "Stomach Pain", icon: <FaMedkit /> }, // Generic Medical Kit
-  { name: "Cough / Flu", icon: <FaThermometerThreeQuarters /> }, // Reused Thermometer (Safe)
-  { name: "Skin Rash", icon: <FaAllergies /> },
-  { name: "Toothache", icon: <FaTooth /> },
-  { name: "Joint Pain", icon: <FaBone /> },
-  { name: "Back Pain", icon: <FaWalking /> }, 
-  { name: "Blurred Vision", icon: <FaEye /> },
-  { name: "Anxiety / Stress", icon: <FaBrain /> },
-  { name: "Ear Pain", icon: <FaDeaf /> }, // Ear Icon
-  { name: "Sore Throat", icon: <FaUserMd /> }, // Doctor Icon (Safe fallback)
-  { name: "Breathing Issue", icon: <FaWind /> }, // Wind/Air Icon
-  { name: "Sudden Weight Loss", icon: <FaWeight /> },
-];
-
 function Diagnosis() {
   const navigate = useNavigate();
-  const [selectedSymptoms, setSelectedSymptoms] = useState([]);
-  const [result, setResult] = useState(null);
+  const bottomRef = useRef(null);
+  
+  const [input, setInput] = useState("");
+  const [messages, setMessages] = useState([
+    { id: 1, sender: "bot", text: "Hello! I am your AI Health Assistant. Describe your symptoms or click a quick option below." }
+  ]);
+  const [isTyping, setIsTyping] = useState(false);
 
-  const toggleSymptom = (symptomName) => {
-    if (selectedSymptoms.includes(symptomName)) {
-      setSelectedSymptoms(selectedSymptoms.filter(s => s !== symptomName));
-    } else {
-      setSelectedSymptoms([...selectedSymptoms, symptomName]);
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  // ✅ UPDATED: Connects to your Python API
+  const handleSend = async (textOverride) => {
+    const text = textOverride || input;
+    if (!text.trim()) return;
+
+    // 1. Add User Message to UI
+    const userMsg = { id: Date.now(), sender: "user", text: text };
+    setMessages(prev => [...prev, userMsg]);
+    setInput("");
+    setIsTyping(true);
+
+    try {
+      // 2. Send Data to Python Server
+      const response = await fetch("http://127.0.0.1:8000/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ message: text }),
+      });
+
+      const data = await response.json();
+
+      // 3. Display AI Response
+      const botMsg = { 
+        id: Date.now() + 1, 
+        sender: "bot", 
+        text: data.text,        // Text from Python
+        specialty: data.specialty // Specialty from Python
+      };
+      
+      setMessages(prev => [...prev, botMsg]);
+
+    } catch (error) {
+      console.error("Error connecting to Chatbot:", error);
+      const errorMsg = { 
+        id: Date.now() + 1, 
+        sender: "bot", 
+        text: "⚠️ Error: Could not connect to the AI Server. Make sure your Python backend is running!" 
+      };
+      setMessages(prev => [...prev, errorMsg]);
     }
-    setResult(null); 
-  };
-
-  // 🧠 "AI" LOGIC
-  const analyzeSymptoms = () => {
-    if (selectedSymptoms.length === 0) return alert("Please select at least one symptom.");
-
-    let specialist = "General Physician"; 
-
-    const s = selectedSymptoms;
-
-    if (s.includes("Chest Pain") || s.includes("Breathing Issue")) specialist = "Cardiologist"; 
     
-    else if (s.includes("Breathing Issue") && s.includes("Cough / Flu")) specialist = "Pulmonologist";
-
-    else if (s.includes("Skin Rash")) specialist = "Dermatologist";
-    
-    else if (s.includes("Toothache")) specialist = "Dentist";
-    
-    else if (s.includes("Blurred Vision")) specialist = "Eye Specialist";
-    
-    else if (s.includes("Anxiety / Stress")) specialist = "Psychiatrist";
-    
-    else if (s.includes("Stomach Pain") || s.includes("Sudden Weight Loss")) specialist = "Gastroenterologist";
-    
-    else if (s.includes("Joint Pain") || s.includes("Back Pain")) specialist = "Orthopedic Surgeon";
-    
-    else if (s.includes("Ear Pain") || s.includes("Sore Throat")) specialist = "ENT Specialist";
-    
-    else if (s.includes("Headache") && s.includes("Blurred Vision")) specialist = "Neurologist";
-
-    setResult(specialist);
+    setIsTyping(false);
   };
 
   return (
     <div style={styles.container}>
+      {/* Header */}
       <div style={styles.header}>
-        <FaStethoscope style={{ fontSize: "60px", color: "#007bff", marginBottom: "20px" }} />
-        <h1 style={styles.title}>AI Symptom Checker</h1>
-        <p style={styles.subtitle}>Select your symptoms below to get an instant recommendation.</p>
+        <div style={{backgroundColor: "white", padding: "8px", borderRadius: "50%", color: "#007bff"}}>
+          <FaRobot size={24} />
+        </div>
+        <div>
+          <h2 style={styles.title}>AI Diagnosis Chat</h2>
+          <p style={styles.subtitle}>Powered by Medibot</p>
+        </div>
       </div>
 
-      {/* Symptom Selection Grid */}
-      <div style={styles.grid}>
-        {symptomList.map((item) => (
-          <div 
-            key={item.name} 
-            style={styles.symptomCard(selectedSymptoms.includes(item.name))}
-            onClick={() => toggleSymptom(item.name)}
-          >
-            <div style={styles.icon}>{item.icon}</div>
-            <div style={{fontWeight: '500'}}>{item.name}</div>
+      {/* Chat Area */}
+      <div style={styles.chatBox}>
+        {messages.map((msg) => (
+          <div key={msg.id} style={styles.messageRow(msg.sender === "bot")}>
+            {msg.sender === "bot" && <FaStethoscope style={{marginRight: "10px", marginTop: "5px", color: "#007bff"}} />}
+            
+            <div style={styles.bubble(msg.sender === "bot")}>
+              {msg.text}
+              
+              {/* Button inside Chat */}
+              {msg.specialty && (
+                <div style={{marginTop: "10px"}}>
+                  <button 
+                    style={styles.bookButton}
+                    onClick={() => navigate(`/find-doctors?specialty=${encodeURIComponent(msg.specialty)}`)}
+                  >
+                    Find {msg.specialty}
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         ))}
+        
+        {isTyping && <div style={{color: "#888", fontSize: "14px", marginLeft: "40px"}}>AI is typing...</div>}
+        <div ref={bottomRef} />
       </div>
 
-      <button onClick={analyzeSymptoms} style={{...styles.btnAction, backgroundColor: "#28a745", marginTop: "40px"}}>
-        Analyze Symptoms
-      </button>
-
-      {/* Result Section */}
-      {result && (
-        <div style={styles.resultBox}>
-          <h3>Based on your symptoms, we recommend seeing a:</h3>
-          <div style={styles.recommendation}>{result}</div>
-          
-          <button 
-            style={styles.btnAction}
-            onClick={() => navigate(`/find-doctors?specialty=${encodeURIComponent(result)}`)}
-          >
-            Find {result}s Near You <FaArrowRight />
+      {/* Input Area */}
+      <div style={styles.inputArea}>
+        
+        {/* Quick Chips */}
+        <div style={styles.quickChips}>
+          <button style={styles.chip} onClick={() => handleSend("I have a severe headache")}>
+            <FaHeadSideVirus /> Headache
+          </button>
+          <button style={styles.chip} onClick={() => handleSend("I feel chest pain")}>
+            <FaHeartbeat /> Chest Pain
+          </button>
+          <button style={styles.chip} onClick={() => handleSend("My tooth hurts")}>
+            <FaTooth /> Toothache
+          </button>
+          <button style={styles.chip} onClick={() => handleSend("My knee hurts")}>
+            <FaRunning /> Joint Pain
           </button>
         </div>
-      )}
+
+        {/* Text Input */}
+        <div style={styles.inputRow}>
+          <input 
+            style={styles.input} 
+            placeholder="Type your symptoms here..." 
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+          />
+          <button style={styles.sendBtn} onClick={() => handleSend()}>
+            <FaPaperPlane size={18} />
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
