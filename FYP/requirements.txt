@@ -1,8 +1,9 @@
+fastapi
+uvicorn
 streamlit
 langchain
 langchain-core
 langchain-community
-langchain-classic
 langchain-google-genai
 google-generativeai
 langchain-groq
