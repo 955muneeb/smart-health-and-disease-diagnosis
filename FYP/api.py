@@ -1,6 +1,7 @@
 import os
 import csv
-from fastapi import FastAPI
+import re
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv, find_dotenv
@@ -35,7 +36,7 @@ AGENT_MODEL = "gemini-2.0-flash"
 VECTORSTORE_PATH = "vectorstore/db_faiss"
 DOCTORS_CSV = "data/doctors.csv"
 
-# 🟢 DISABLE SAFETY FILTERS (So it answers medical questions from your book)
+# 🟢 DISABLE SAFETY FILTERS
 SAFETY_SETTINGS = {
     HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_NONE,
     HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_NONE,
@@ -82,9 +83,12 @@ def doctor_lookup(user_specialty: str, city: str) -> dict:
         if not results:
             return {"error": f"No {user_specialty} found in {city}."}
 
+        # 🟢 UPDATED: Now includes Phone Number in the output
         rec_text = f"Found matches:\n"
         for r in results[:3]:
-            rec_text += f"- {r['name']} ({r['address']})\n"
+            phone = r.get('phone', 'N/A')
+            rec_text += f"- {r['name']} ({r['address']}) - 📞 Phone: {phone}\n"
+            
         return {"recommendations": rec_text, "specialty_found": user_specialty}
 
     except Exception as e:
@@ -124,8 +128,8 @@ system_prompt = """
 You are Medibot, an AI assistant powered by a specific Medical Encyclopedia.
 
 **STRICT RULES:**
-1. **Always Check the Book:** If the user asks "What is [Disease]?", you MUST use the `disease_info` tool to read from the encyclopedia. Do NOT generate an answer from your own knowledge unless the tool returns nothing.
-2. **Finding Doctors:** If the user asks to find a doctor, use `doctor_lookup`.
+1. **Always Check the Book:** If the user asks "What is [Disease]?", you MUST use the `disease_info` tool.
+2. **Finding Doctors:** If the user asks to find a doctor, use `doctor_lookup`. **Always display the doctor's Name, Address, and Phone Number from the tool output.**
 3. **Medical Safety:** If you provide symptoms or treatments, verify they come from the context provided by `disease_info`.
 """
 
