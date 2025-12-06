@@ -1,0 +1,239 @@
+=== CARDIOLOGY & HEART SURGERY ===
+(Covers: Cardiologist, Cardiac Surgeon, Interventional Cardiologist, Cardiovascular Surgeon, Thoracic Surgeon)
+
+DISEASE: CORONARY ARTERY DISEASE (CAD)
+SYMPTOMS: Chest pain (angina), shortness of breath, fatigue, heart attack signs (pain in arm/jaw).
+CAUSES: Plaque buildup (cholesterol), smoking, hypertension, diabetes, sedentary lifestyle.
+TREATMENT: Statins, aspirin, beta-blockers, angioplasty (stents), bypass surgery (CABG).
+
+DISEASE: HYPERTENSION (HIGH BLOOD PRESSURE)
+SYMPTOMS: Often silent; severe cases cause headaches, nosebleeds, vision problems, chest pounding.
+CAUSES: High salt diet, obesity, stress, genetics, kidney disease.
+TREATMENT: ACE inhibitors, diuretics, lifestyle changes (low sodium diet, exercise).
+
+DISEASE: ARRHYTHMIA (IRREGULAR HEARTBEAT)
+SYMPTOMS: Palpitations (fluttering chest), dizziness, fainting, shortness of breath.
+CAUSES: Heart tissue scarring, electrolyte imbalance, stress, caffeine/alcohol.
+TREATMENT: Anti-arrhythmic drugs, pacemaker, cardioversion, catheter ablation.
+
+=== DERMATOLOGY & COSMETOLOGY ===
+(Covers: Dermatologist, Cosmetologist, Aesthetic Physician, Hair Transplant Surgeon, Laser Specialist)
+
+DISEASE: ACNE VULGARIS
+SYMPTOMS: Blackheads, whiteheads, papules, pustules, painful cysts, scarring.
+CAUSES: Excess oil (sebum), clogged pores, bacteria (C. acnes), hormonal fluctuations.
+TREATMENT: Topical retinoids, benzoyl peroxide, antibiotics (doxycycline), chemical peels, laser therapy.
+
+DISEASE: ECZEMA (ATOPIC DERMATITIS)
+SYMPTOMS: Dry, itchy skin, red patches (hands, feet, neck), cracked or scaly skin.
+CAUSES: Immune system overreaction, genetics, environmental triggers (soaps, stress).
+TREATMENT: Moisturizers, corticosteroid creams, antihistamines, phototherapy.
+
+DISEASE: PSORIASIS
+SYMPTOMS: Red patches of skin covered with thick, silvery scales, dry/cracked skin, itching.
+CAUSES: Autoimmune disease speeding up skin cell growth cycle.
+TREATMENT: Topical corticosteroids, vitamin D analogues, biologics, light therapy.
+
+DISEASE: ALOPECIA (HAIR LOSS)
+SYMPTOMS: Gradual thinning on top of head, circular or patchy bald spots, sudden loosening of hair.
+CAUSES: Genetics (male/female pattern baldness), stress, hormonal changes, medical conditions.
+TREATMENT: Minoxidil, Finasteride, hair transplant surgery, PRP therapy.
+
+=== DENTISTRY & ORAL SURGERY ===
+(Covers: Dentist, Orthodontist, Periodontist, Implantologist, Endodontist, Oral Surgeon)
+
+DISEASE: DENTAL CARIES (CAVITIES)
+SYMPTOMS: Toothache, sensitivity to hot/cold, visible holes in teeth, pain when biting.
+CAUSES: Bacteria converting sugar/starch into acid that destroys enamel.
+TREATMENT: Fluoride, fillings, crowns, root canals (if nerve is infected).
+
+DISEASE: PERIODONTITIS (GUM DISEASE)
+SYMPTOMS: Swollen gums, bleeding while brushing, receding gums, loose teeth, bad breath.
+CAUSES: Poor oral hygiene leading to plaque and tartar buildup.
+TREATMENT: Scaling and root planing (deep cleaning), gum graft surgery, antibiotics.
+
+DISEASE: MALOCCLUSION (MISALIGNED TEETH)
+SYMPTOMS: Overbite, underbite, difficulty chewing, speech impediments, jaw pain.
+CAUSES: Genetics, thumb sucking in childhood, tooth loss.
+TREATMENT: Braces, clear aligners (Invisalign), jaw surgery (orthognathic surgery).
+
+=== NEUROLOGY & NEUROSURGERY ===
+(Covers: Neurologist, Neurosurgeon, Spinal Surgeon, Pediatric Neurologist)
+
+DISEASE: EPILEPSY
+SYMPTOMS: Seizures (uncontrollable jerking), temporary confusion, staring spells, loss of consciousness.
+CAUSES: Genetic influence, head trauma, brain conditions (stroke/tumor), infectious diseases.
+TREATMENT: Anti-epileptic drugs (AEDs), ketogenic diet, vagus nerve stimulation, brain surgery.
+
+DISEASE: MIGRAINE
+SYMPTOMS: Severe throbbing pain (often one-sided), nausea, sensitivity to light/sound, visual aura.
+CAUSES: Hormonal changes, stress, sensory stimuli, sleep changes, food triggers.
+TREATMENT: Triptans, pain relievers, anti-nausea meds, preventive medications (beta-blockers).
+
+DISEASE: HERNIATED DISC (SLIPPED DISC)
+SYMPTOMS: Arm or leg pain, numbness or tingling, weakness in muscles served by affected nerves.
+CAUSES: Wear and tear (disk degeneration), strain from lifting, injury.
+TREATMENT: Physical therapy, muscle relaxants, cortisone injections, discectomy surgery.
+
+=== ORTHOPEDICS, PHYSIOTHERAPY & RHEUMATOLOGY ===
+(Covers: Orthopedic Surgeon, Rheumatologist, Physiotherapist, Chiropractor, Sports Medicine)
+
+DISEASE: OSTEOARTHRITIS
+SYMPTOMS: Joint pain, stiffness, tenderness, loss of flexibility, grating sensation.
+CAUSES: Aging, joint injury, obesity (stress on weight-bearing joints).
+TREATMENT: NSAIDs (painkillers), physical therapy, corticosteroid injections, joint replacement.
+
+DISEASE: RHEUMATOID ARTHRITIS
+SYMPTOMS: Tender/warm/swollen joints, joint stiffness in mornings, fatigue, fever.
+CAUSES: Autoimmune disorder attacking joint lining (synovium).
+TREATMENT: DMARDs (methotrexate), biologics, physical therapy.
+
+DISEASE: SCIATICA
+SYMPTOMS: Pain radiating from lower back down the leg, burning sensation, numbness.
+CAUSES: Herniated disc or bone spur compressing the sciatic nerve.
+TREATMENT: Chiropractic adjustment, physical therapy, cold/hot packs, anti-inflammatories.
+
+=== GASTROENTEROLOGY & HEPATOLOGY ===
+(Covers: Gastroenterologist, Hepatologist, Hepatobiliary Surgeon, Colorectal Surgeon)
+
+DISEASE: GERD (ACID REFLUX)
+SYMPTOMS: Heartburn, chest pain, difficulty swallowing, regurgitation of food/sour liquid.
+CAUSES: Weak lower esophageal sphincter, obesity, hiatal hernia.
+TREATMENT: Antacids, proton pump inhibitors (PPIs), lifestyle changes (avoid triggers).
+
+DISEASE: HEPATITIS (B & C)
+SYMPTOMS: Fatigue, flu-like symptoms, dark urine, pale stool, abdominal pain, jaundice (yellow skin).
+CAUSES: Viral infection (blood/body fluids), alcohol abuse (for alcoholic hepatitis).
+TREATMENT: Antiviral medications, interferon injections, liver transplant (severe cases).
+
+DISEASE: HEMORRHOIDS (PILES)
+SYMPTOMS: Itching/irritation in anal region, pain, swelling, bleeding during bowel movements.
+CAUSES: Straining during bowel movements, chronic constipation, pregnancy.
+TREATMENT: High fiber diet, topical creams, rubber band ligation, hemorrhoidectomy.
+
+=== ENDOCRINOLOGY & DIABETES ===
+(Covers: Endocrinologist, Diabetologist, Thyroid Surgeon, Diabetes Counsellor)
+
+DISEASE: TYPE 2 DIABETES
+SYMPTOMS: Increased thirst, frequent urination, extreme hunger, fatigue, blurred vision, slow healing.
+CAUSES: Insulin resistance, obesity, inactivity, genetics.
+TREATMENT: Metformin, insulin therapy, diet/exercise management, bariatric surgery.
+
+DISEASE: HYPOTHYROIDISM
+SYMPTOMS: Fatigue, cold sensitivity, constipation, dry skin, weight gain, puffy face.
+CAUSES: Hashimoto's disease (autoimmune), thyroid surgery, radiation therapy.
+TREATMENT: Synthetic thyroid hormone (Levothyroxine).
+
+DISEASE: HYPERTHYROIDISM
+SYMPTOMS: Weight loss, rapid heartbeat, sweating, nervousness, irritability.
+CAUSES: Graves' disease, thyroid nodules, thyroiditis.
+TREATMENT: Radioactive iodine, anti-thyroid medications, thyroidectomy.
+
+=== PULMONOLOGY, ASTHMA & ENT ===
+(Covers: Pulmonologist, Asthma Specialist, ENT Specialist, ENT Surgeon)
+
+DISEASE: ASTHMA
+SYMPTOMS: Shortness of breath, chest tightness, wheezing, coughing attacks (worse at night).
+CAUSES: Airborne allergens (pollen, mites), respiratory infections, physical activity, cold air.
+TREATMENT: Rescue inhalers (Albuterol), inhaled corticosteroids, leukotriene modifiers.
+
+DISEASE: CHRONIC OBSTRUCTIVE PULMONARY DISEASE (COPD)
+SYMPTOMS: Chronic cough (smoker's cough), mucus production, shortness of breath, wheezing.
+CAUSES: Long-term exposure to irritating gases (cigarette smoke), pollution.
+TREATMENT: Bronchodilators, inhaled steroids, oxygen therapy, pulmonary rehabilitation.
+
+DISEASE: SINUSITIS (CHRONIC)
+SYMPTOMS: Nasal inflammation, thick discharge, congestion, pain around eyes/cheeks, reduced smell.
+CAUSES: Nasal polyps, deviated septum, respiratory infections, allergies.
+TREATMENT: Saline irrigation, nasal corticosteroids, antibiotics (if bacterial), sinus surgery.
+
+=== UROLOGY & NEPHROLOGY ===
+(Covers: Urologist, Nephrologist, Andrologist, Renal Surgeon, Kidney Transplant Surgeon)
+
+DISEASE: KIDNEY STONES
+SYMPTOMS: Severe sharp pain in side/back, pain on urination, pink/red/brown urine, nausea.
+CAUSES: Dehydration, high-protein/salt/sugar diets, obesity.
+TREATMENT: Drinking water, pain relievers, alpha blockers, shock wave lithotripsy.
+
+DISEASE: CHRONIC KIDNEY DISEASE (CKD)
+SYMPTOMS: Nausea, vomiting, loss of appetite, fatigue, sleep issues, swelling of feet/ankles.
+CAUSES: Type 1 or 2 diabetes, high blood pressure, glomerulonephritis.
+TREATMENT: Controlling BP/sugar, dialysis, kidney transplant.
+
+DISEASE: ERECTILE DYSFUNCTION (ED)
+SYMPTOMS: Trouble getting or keeping an erection, reduced sexual desire.
+CAUSES: Heart disease, diabetes, obesity, low testosterone, stress/anxiety.
+TREATMENT: Oral medications (Sildenafil), testosterone replacement, psychological counseling.
+
+=== GYNECOLOGY, OBSTETRICS & FERTILITY ===
+(Covers: Gynecologist, Obstetrician, Fertility Consultant, Maternal Fetal Medicine)
+
+DISEASE: POLYCYSTIC OVARY SYNDROME (PCOS)
+SYMPTOMS: Irregular periods, excess androgen (facial hair/acne), polycystic ovaries, infertility.
+CAUSES: Excess insulin, low-grade inflammation, heredity.
+TREATMENT: Birth control pills, Metformin, Clomiphene (for ovulation), lifestyle changes.
+
+DISEASE: ENDOMETRIOSIS
+SYMPTOMS: Painful periods (dysmenorrhea), pain with intercourse, pain with bowel movements, infertility.
+CAUSES: Retrograde menstruation, transformation of peritoneal cells.
+TREATMENT: Pain medication, hormone therapy, conservative surgery, hysterectomy.
+
+=== PEDIATRICS ===
+(Covers: Pediatrician, Neonatologist, Pediatric Surgeon, Pediatric Cardiologist, etc.)
+
+DISEASE: OTITIS MEDIA (EAR INFECTION)
+SYMPTOMS: Ear pain, tugging at ear, trouble sleeping, crying more than usual, fever.
+CAUSES: Bacteria/virus in middle ear, often after cold/flu. Eustachian tube blockage.
+TREATMENT: Warm compress, pain meds, antibiotics (Amoxicillin) if bacterial/severe.
+
+DISEASE: CHICKENPOX (VARICELLA)
+SYMPTOMS: Itchy rash with fluid-filled blisters, fever, loss of appetite, headache.
+CAUSES: Varicella-zoster virus (highly contagious).
+TREATMENT: Calamine lotion, oatmeal baths, antihistamines for itching. (Vaccine prevents it).
+
+=== MENTAL HEALTH ===
+(Covers: Psychiatrist, Psychologist, Counselor, Autism Consultant)
+
+DISEASE: MAJOR DEPRESSIVE DISORDER
+SYMPTOMS: Feelings of sadness/emptiness, loss of interest, sleep disturbances, lack of energy.
+CAUSES: Biological chemistry, hormones, inherited traits, childhood trauma.
+TREATMENT: Antidepressants (SSRIs), Psychotherapy (CBT), lifestyle adjustments.
+
+DISEASE: ANXIETY DISORDER (GAD)
+SYMPTOMS: Persistent worrying, overthinking, difficulty handling uncertainty, restlessness.
+CAUSES: Brain chemistry, genetics, stress, personality type.
+TREATMENT: Psychotherapy, anti-anxiety medications (Benzodiazepines for short term), SSRIs.
+
+=== ONCOLOGY (CANCER) ===
+(Covers: Oncologist, Radiation Oncologist, Surgical Oncologist)
+
+DISEASE: BREAST CANCER
+SYMPTOMS: Lump in breast, change in breast shape, dimpling skin, inverted nipple.
+CAUSES: Hormonal, lifestyle, environmental factors. BRCA1/BRCA2 gene mutations.
+TREATMENT: Lumpectomy/Mastectomy, radiation, chemotherapy, hormone therapy.
+
+DISEASE: LUNG CANCER
+SYMPTOMS: New cough that doesn't go away, coughing up blood, shortness of breath, chest pain.
+CAUSES: Smoking (primary cause), secondhand smoke, radon gas, asbestos.
+TREATMENT: Surgery, chemotherapy, radiation therapy, immunotherapy.
+
+=== NUTRITION & WEIGHT MANAGEMENT ===
+(Covers: Nutritionist, Dietitian, Bariatric Surgeon, Obesity Specialist)
+
+DISEASE: OBESITY
+SYMPTOMS: BMI over 30, breathlessness, increased sweating, joint pain, fatigue.
+CAUSES: Calorie surplus, genetics, inactivity, medications, hormonal issues.
+TREATMENT: Calorie deficit diet, exercise plan, behavioral therapy, weight loss surgery.
+
+=== EYE CARE ===
+(Covers: Eye Specialist, Eye Surgeon, Optometrist, Vitreo Retina Surgeon)
+
+DISEASE: CATARACTS
+SYMPTOMS: Clouded/blurred vision, increasing difficulty with vision at night, sensitivity to light.
+CAUSES: Aging, injury, diabetes, excessive UV exposure.
+TREATMENT: Corrective lenses (early stages), cataract surgery (lens replacement).
+
+DISEASE: GLAUCOMA
+SYMPTOMS: Patchy blind spots (peripheral vision), tunnel vision, severe headache, eye pain.
+CAUSES: High pressure in eye damaging optic nerve.
+TREATMENT: Prescription eye drops, oral meds, laser treatment, surgery.

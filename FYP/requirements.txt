@@ -1,17 +1,12 @@
 fastapi
 uvicorn
 python-dotenv
-# Core AI Libraries (Pinned to stable versions)
 langchain==0.2.16
-langchain-core==0.2.38
 langchain-community==0.2.16
+langchain-core==0.2.38
 langchain-google-genai==1.0.10
-langchain-huggingface
-langchain-groq
 google-generativeai
-sentence-transformers
-# Database & Utils
+# Removed sentence-transformers and huggingface to save space
 faiss-cpu
-pypdf
-streamlit
 pandas
+pypdf
