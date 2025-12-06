@@ -16,6 +16,8 @@ import DoctorList from "./pages/patient/DoctorList";
 import DoctorProfile from "./pages/patient/DoctorProfile";
 import MyAppointments from "./pages/patient/MyAppointments";
 import Diagnosis from "./pages/patient/Diagnosis";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import HealthRecords from "./pages/patient/HealthRecords";
 
 // Protected route
 function ProtectedRoute({ children, role }) {
@@ -43,6 +45,7 @@ function App() {
            
          <Route path="/" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/admin" element={<AdminDashboard />} />
           <Route
             path="/doctor-search"
             element={
@@ -51,6 +54,17 @@ function App() {
               </ProtectedRoute>
             }
           />
+  
+
+
+  /* this rout is for storing images */
+<Route path="/health-records" element={
+  <ProtectedRoute role="patient">
+    <HealthRecords />
+  </ProtectedRoute>
+} />
+
+
           <Route
   path="/find-doctors"
   element={

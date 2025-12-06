@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { auth, db } from "../services/firebase";
 import { doc, getDoc } from "firebase/firestore";
 // Added FaStethoscope for the Diagnosis Icon
-import { FaUserMd, FaCalendarCheck, FaSignOutAlt, FaHome, FaStethoscope } from "react-icons/fa";
+import { FaUserMd, FaCalendarCheck, FaSignOutAlt, FaHome, FaStethoscope, FaFileAlt } from "react-icons/fa";
 
 const styles = {
   nav: {
@@ -124,6 +124,10 @@ function Navbar() {
             <Link to="/my-appointments" style={styles.link}>
               <FaCalendarCheck /> My Appointments
             </Link>
+
+            <Link to="/health-records" style={styles.link}>
+  <FaFileAlt /> Health Records
+</Link>
           </>
         )}
 
