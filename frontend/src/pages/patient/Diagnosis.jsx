@@ -70,7 +70,7 @@ function Diagnosis() {
 
     try {
       // 2. Send Data to Python Server
-      const response = await fetch("http://127.0.0.1:8000/chat", {
+      const response = await fetch("https://smart-health-and-disease-diagnosis.onrender.com/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
