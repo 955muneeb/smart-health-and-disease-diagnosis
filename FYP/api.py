@@ -32,7 +32,7 @@ app.add_middleware(
 )
 
 GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY")
-AGENT_MODEL = "gemini-2.0-flash"
+AGENT_MODEL = "gemini-1.5-flash"
 VECTORSTORE_PATH = "vectorstore/db_faiss"
 DOCTORS_CSV = "data/doctors.csv"
 
