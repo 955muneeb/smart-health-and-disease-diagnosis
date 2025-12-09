@@ -28,7 +28,8 @@ def create_vector_db():
         print("❌ Error: GOOGLE_API_KEY not found in .env file")
         return
 
-    embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+    # 🟢 FIXED: Use the modern standard embedding model
+    embeddings = GoogleGenerativeAIEmbeddings(model="models/text-embedding-004")
 
     # 🟢 ULTRA-SAFE MODE: 1 Chunk at a time
     vector_db = None
@@ -51,8 +52,8 @@ def create_vector_db():
                 
                 success = True
                 
-                # 🟢 WAIT 4 SECONDS (Keeps us under 15 requests/minute limit)
-                time.sleep(4) 
+                # 🟢 WAIT 2 SECONDS (Safe for text files)
+                time.sleep(2) 
 
             except google.api_core.exceptions.ResourceExhausted:
                 print(f"\n⚠️ Speed Limit Hit. Waiting 30 seconds...")

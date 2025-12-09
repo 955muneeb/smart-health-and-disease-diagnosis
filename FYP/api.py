@@ -1,7 +1,7 @@
 import os
 import csv
-import re
-from fastapi import FastAPI, HTTPException
+import difflib
+from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv, find_dotenv
@@ -11,10 +11,8 @@ from langchain_community.vectorstores import FAISS
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.tools import tool
 from langchain.agents import create_tool_calling_agent, AgentExecutor
-from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
+from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings, HarmBlockThreshold, HarmCategory
 from langchain_core.messages import HumanMessage, AIMessage 
-# ✅ SAFETY IMPORTS
-from langchain_google_genai import HarmBlockThreshold, HarmCategory
 
 # =============================
 # 1. Config & Setup
@@ -32,11 +30,15 @@ app.add_middleware(
 )
 
 GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY")
-AGENT_MODEL = "gemini-1.5-flash"
-VECTORSTORE_PATH = "vectorstore/db_faiss"
-DOCTORS_CSV = "data/doctors.csv"
 
-# 🟢 DISABLE SAFETY FILTERS
+# 🟢 FIXED: Use the stable standard model
+AGENT_MODEL = "gemini-1.5-flash" 
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+VECTORSTORE_PATH = os.path.join(BASE_DIR, "vectorstore", "db_faiss")
+DOCTORS_CSV = os.path.join(BASE_DIR, "data", "doctors.csv")
+
+# Disable Safety Filters
 SAFETY_SETTINGS = {
     HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_NONE,
     HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_NONE,
@@ -44,13 +46,13 @@ SAFETY_SETTINGS = {
     HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE,
 }
 
-# 🧠 MEMORY
 chat_history = [] 
 
 # =============================
 # 2. Load Models
 # =============================
-embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+# 🟢 FIXED: Use the modern standard embedding model
+embeddings = GoogleGenerativeAIEmbeddings(model="models/text-embedding-004")
 
 try:
     vectorstore = FAISS.load_local(VECTORSTORE_PATH, embeddings, allow_dangerous_deserialization=True)
@@ -65,7 +67,7 @@ except Exception as e:
 
 @tool
 def doctor_lookup(user_specialty: str, city: str) -> dict:
-    """Find a doctor by specialty and city from the database."""
+    """Find a doctor by specialty and city from the database. Handles spelling errors."""
     if not user_specialty or not city:
         return {"error": "Please provide both specialty and city."}
 
@@ -73,64 +75,68 @@ def doctor_lookup(user_specialty: str, city: str) -> dict:
     spec_in = user_specialty.lower().strip()
     
     results = []
+    all_cities = set() 
+
     try:
         with open(DOCTORS_CSV, mode='r', encoding='utf-8') as file:
             reader = csv.DictReader(file)
-            for row in reader:
+            rows = list(reader)
+            
+            for row in rows:
+                if row['city']:
+                    all_cities.add(row['city'].lower())
+
+            # Fuzzy Match City
+            if city_in not in all_cities:
+                matches = difflib.get_close_matches(city_in, list(all_cities), n=1, cutoff=0.6)
+                if matches:
+                    city_in = matches[0]
+
+            for row in rows:
                 if spec_in in row['specialty'].lower() and city_in == row['city'].lower():
                     results.append(row)
 
         if not results:
-            return {"error": f"No {user_specialty} found in {city}."}
+            return {"error": f"No {user_specialty} found in {city_in.title()}."}
 
-        # 🟢 UPDATED: Now includes Phone Number in the output
-        rec_text = f"Found matches:\n"
+        rec_text = f"Found matches in {city_in.title()}:\n"
         for r in results[:3]:
             phone = r.get('phone', 'N/A')
-            rec_text += f"- {r['name']} ({r['address']}) - 📞 Phone: {phone}\n"
-            
-        return {"recommendations": rec_text, "specialty_found": user_specialty}
+            rec_text += f"- {r['name']} ({r['address']}) - 📞 {phone}\n"
+        
+        return {"recommendations": rec_text, "specialty_found": results[0]['specialty']}
 
     except Exception as e:
         return {"error": str(e)}
 
 @tool
 def disease_info(query: str) -> str:
-    """
-    Use this tool to find information about diseases, symptoms, and treatments 
-    FROM THE UPLOADED ENCYCLOPEDIA. 
-    Input should be the disease name or question (e.g. 'What is flu?').
-    """
+    """Find disease info from the encyclopedia."""
     if not retriever: return "Knowledge base not loaded."
-    
-    # RAG: Fetch documents from your book
     docs = retriever.invoke(query)
-    
-    if not docs: 
-        return "I checked the encyclopedia but found no information on that."
-    
-    # Return the exact content from the book
+    if not docs: return "I checked the encyclopedia but found no information."
     return f"**From Encyclopedia:**\n{docs[0].page_content}"
 
 @tool
 def list_diseases() -> str:
-    """Returns a list of diseases the bot can discuss."""
-    return "I can discuss diseases found in the uploaded Gale Encyclopedia."
+    """Returns a list of diseases."""
+    return "I can discuss diseases found in the uploaded Encyclopedia."
 
 # =============================
-# 4. Initialize Agent (STRICT PROMPT)
+# 4. Initialize Agent
 # =============================
 llm = ChatGoogleGenerativeAI(model=AGENT_MODEL, google_api_key=GOOGLE_API_KEY, safety_settings=SAFETY_SETTINGS)
 tools = [doctor_lookup, disease_info, list_diseases]
 
-# 🔥 STRICT RAG PROMPT
 system_prompt = """
-You are Medibot, an AI assistant powered by a specific Medical Encyclopedia.
+You are Medibot, an empathetic AI medical assistant. 
 
-**STRICT RULES:**
-1. **Always Check the Book:** If the user asks "What is [Disease]?", you MUST use the `disease_info` tool.
-2. **Finding Doctors:** If the user asks to find a doctor, use `doctor_lookup`. **Always display the doctor's Name, Address, and Phone Number from the tool output.**
-3. **Medical Safety:** If you provide symptoms or treatments, verify they come from the context provided by `disease_info`.
+**Rules:**
+1. If the user asks about a disease, use `disease_info`.
+2. If the user asks for a doctor, use `doctor_lookup`. 
+   - Fix severe typos (e.g. "insmlbd" -> "Islamabad") before calling the tool.
+   - Always display the Name, Address, and Phone Number from the tool.
+3. If the user describes symptoms, ask clarification questions first.
 """
 
 agent_prompt = ChatPromptTemplate.from_messages([
@@ -166,15 +172,17 @@ async def chat_endpoint(query: UserQuery):
         chat_history.append(HumanMessage(content=query.message))
         chat_history.append(AIMessage(content=output_text))
 
-        # Specialty Extraction
         specialty = None
         lower_res = output_text.lower()
         keywords = {
-            "cardiologist": "Cardiologist", "dermatologist": "Dermatologist", 
-            "dentist": "Dentist", "neurologist": "Neurologist", 
-            "orthopedic": "Orthopedic Surgeon", "gastroenterologist": "Gastroenterologist",
-            "gynecologist": "Gynecologist", "pediatrician": "Pediatrician", 
-            "urologist": "Urologist", "pulmonologist": "Pulmonologist", "ent": "ENT Specialist"
+            "cardiolog": "Cardiologist", "dermatolog": "Dermatologist", 
+            "dentist": "Dentist", "neurolog": "Neurologist", 
+            "orthopedic": "Orthopedic Surgeon", "gastro": "Gastroenterologist", "stomach": "Gastroenterologist",
+            "gynecol": "Gynecologist", "women": "Gynecologist",
+            "pediatric": "Pediatrician", "child": "Pediatrician",
+            "urolog": "Urologist", "kidney": "Urologist",
+            "pulmonolog": "Pulmonologist", "lung": "Pulmonologist",
+            "ent": "ENT Specialist", "throat": "ENT Specialist", "ear": "ENT Specialist"
         }
         
         for k, v in keywords.items():
