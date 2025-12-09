@@ -31,9 +31,8 @@ app.add_middleware(
 
 GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY")
 
-# 🟢 FIXED: Use the stable standard model
-AGENT_MODEL = "gemini-1.5-flash" 
-
+# 🟢 FIXED: Use the standard stable model
+AGENT_MODEL = "gemini-flash-latest"
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 VECTORSTORE_PATH = os.path.join(BASE_DIR, "vectorstore", "db_faiss")
 DOCTORS_CSV = os.path.join(BASE_DIR, "data", "doctors.csv")
@@ -51,8 +50,8 @@ chat_history = []
 # =============================
 # 2. Load Models
 # =============================
-# 🟢 FIXED: Use the modern standard embedding model
-embeddings = GoogleGenerativeAIEmbeddings(model="models/text-embedding-004")
+# 🟢 FIXED: Use the standard stable embedding model
+embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
 
 try:
     vectorstore = FAISS.load_local(VECTORSTORE_PATH, embeddings, allow_dangerous_deserialization=True)
@@ -104,7 +103,9 @@ def doctor_lookup(user_specialty: str, city: str) -> dict:
             phone = r.get('phone', 'N/A')
             rec_text += f"- {r['name']} ({r['address']}) - 📞 {phone}\n"
         
-        return {"recommendations": rec_text, "specialty_found": results[0]['specialty']}
+        # Return clean specialty for button logic
+        found_specialty = results[0]['specialty'] if results else user_specialty
+        return {"recommendations": rec_text, "specialty_found": found_specialty}
 
     except Exception as e:
         return {"error": str(e)}
@@ -119,7 +120,7 @@ def disease_info(query: str) -> str:
 
 @tool
 def list_diseases() -> str:
-    """Returns a list of diseases."""
+    """Returns a list of diseases found in the uploaded Encyclopedia."""
     return "I can discuss diseases found in the uploaded Encyclopedia."
 
 # =============================
