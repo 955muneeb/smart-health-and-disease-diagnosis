@@ -2,6 +2,7 @@ import os
 import csv
 import difflib
 from fastapi import FastAPI
+from fastapi import Query
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv, find_dotenv
@@ -46,6 +47,103 @@ SAFETY_SETTINGS = {
 }
 
 chat_history = [] 
+
+# =============================
+# Specialty inference (deterministic, symptom-first)
+# =============================
+
+SPECIALTY_KEYWORDS = {
+    "Cardiologist": [
+        "chest pain", "chest tight", "chest pressure", "heart", "palpitation", "cardiac",
+        "high blood pressure", "hypertension", "shortness of breath", "angina"
+    ],
+    "Pulmonologist": [
+        "breathing", "breath", "wheezing", "asthma", "cough", "lungs", "copd", "pneumonia"
+    ],
+    "Neurologist": [
+        "headache", "migraine", "seizure", "stroke", "numb", "tingling", "dizziness"
+    ],
+    "Dentist": [
+        "tooth", "teeth", "toothache", "gum", "cavity", "jaw pain"
+    ],
+    "Dermatologist": [
+        "skin", "rash", "acne", "eczema", "itch", "hives"
+    ],
+    "ENT Specialist": [
+        "ear", "throat", "tonsil", "sinus", "nose", "hearing", "ear pain"
+    ],
+    "Orthopedic Surgeon": [
+        "knee", "joint", "bone", "fracture", "back pain", "shoulder", "sprain"
+    ],
+    "Gynecologist": [
+        "pregnancy", "period", "menstrual", "vaginal", "pelvic pain"
+    ],
+    "Pediatrician": [
+        "baby", "infant", "child", "kid", "vaccination"
+    ],
+    "Urologist": [
+        "urine", "urinary", "kidney", "bladder", "prostate"
+    ],
+    "Endocrinologist": [
+        "diabetes", "thyroid", "hormone"
+    ],
+    "Psychiatrist": [
+        "anxiety", "depression", "panic", "stress", "insomnia"
+    ],
+}
+
+def infer_specialty_from_text(text: str) -> str | None:
+    if not text:
+        return None
+    t = text.lower()
+    # Prefer more serious / high-priority matches first by ordering in dict above
+    for specialty, keywords in SPECIALTY_KEYWORDS.items():
+        for kw in keywords:
+            if kw in t:
+                return specialty
+    return None
+
+
+def _read_doctors_csv() -> list[dict]:
+    with open(DOCTORS_CSV, mode="r", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        rows = []
+        for r in reader:
+            # normalize priority to int if possible
+            try:
+                r["priority"] = int(r.get("priority", 0))
+            except Exception:
+                r["priority"] = 0
+            rows.append(r)
+        return rows
+
+
+def find_doctors_from_csv(specialty: str | None = None, city: str | None = None, limit: int = 20) -> list[dict]:
+    specialty_in = (specialty or "").strip().lower()
+    city_in = (city or "").strip().lower()
+
+    rows = _read_doctors_csv()
+
+    # Fuzzy match city if provided
+    if city_in:
+        all_cities = {r.get("city", "").lower() for r in rows if r.get("city")}
+        if city_in not in all_cities:
+            matches = difflib.get_close_matches(city_in, list(all_cities), n=1, cutoff=0.6)
+            if matches:
+                city_in = matches[0]
+
+    out = []
+    for r in rows:
+        r_city = (r.get("city") or "").lower()
+        r_spec = (r.get("specialty") or "").lower()
+        if specialty_in and specialty_in not in r_spec:
+            continue
+        if city_in and city_in != r_city:
+            continue
+        out.append(r)
+
+    out.sort(key=lambda x: -int(x.get("priority", 0)))
+    return out[: max(1, min(limit, 100))]
 
 # =============================
 # 2. Load Models
@@ -173,26 +271,23 @@ async def chat_endpoint(query: UserQuery):
         chat_history.append(HumanMessage(content=query.message))
         chat_history.append(AIMessage(content=output_text))
 
-        specialty = None
-        lower_res = output_text.lower()
-        keywords = {
-            "cardiolog": "Cardiologist", "dermatolog": "Dermatologist", 
-            "dentist": "Dentist", "neurolog": "Neurologist", 
-            "orthopedic": "Orthopedic Surgeon", "gastro": "Gastroenterologist", "stomach": "Gastroenterologist",
-            "gynecol": "Gynecologist", "women": "Gynecologist",
-            "pediatric": "Pediatrician", "child": "Pediatrician",
-            "urolog": "Urologist", "kidney": "Urologist",
-            "pulmonolog": "Pulmonologist", "lung": "Pulmonologist",
-            "ent": "ENT Specialist", "throat": "ENT Specialist", "ear": "ENT Specialist"
-        }
-        
-        for k, v in keywords.items():
-            if k in lower_res:
-                specialty = v
-                break
+        # IMPORTANT: infer specialty from the *user message* (deterministic),
+        # not from whatever the LLM happened to mention in its response.
+        specialty = infer_specialty_from_text(query.message)
 
         return {"text": output_text, "specialty": specialty}
 
     except Exception as e:
         print(f"Error: {e}")
         return {"text": "Error processing your request.", "specialty": None}
+
+
+@app.get("/doctors")
+def doctors_endpoint(
+    specialty: str | None = Query(default=None),
+    city: str | None = Query(default=None),
+    limit: int = Query(default=20, ge=1, le=100),
+):
+    """Return doctors from FYP/data/doctors.csv (independent of Firebase registrations)."""
+    docs = find_doctors_from_csv(specialty=specialty, city=city, limit=limit)
+    return {"doctors": docs, "count": len(docs), "specialty": specialty, "city": city}

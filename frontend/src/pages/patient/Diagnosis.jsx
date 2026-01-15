@@ -70,7 +70,10 @@ function Diagnosis() {
 
     try {
       // 2. Send Data to Python Server
-      const response = await fetch("https://smart-health-and-disease-diagnosis.onrender.com/chat", {
+      const API_BASE =
+        process.env.REACT_APP_API_URL || "http://localhost:8000";
+
+      const response = await fetch(`${API_BASE}/chat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

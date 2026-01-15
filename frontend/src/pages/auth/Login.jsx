@@ -21,20 +21,27 @@ function Login() {
   };
 
   return (
-    <div style={{ padding: '50px', maxWidth: '400px', margin: 'auto' }}>
-      <h2>Login</h2>
-      <form onSubmit={handleLogin}>
-        <div style={{ marginBottom: '10px' }}>
-          <label>Email:</label><br/>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+    <div style={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f5f8ff', padding: '20px' }}>
+      <div style={{ width: '100%', maxWidth: '420px', background: '#fff', padding: '32px', borderRadius: '10px', boxShadow: '0 6px 24px rgba(15,15,15,0.08)' }}>
+        <div style={{ textAlign: 'center', marginBottom: '18px' }}>
+          <h2 style={{ margin: 0 }}>Welcome back</h2>
+          <p style={{ margin: '8px 0 0', color: '#6b7280' }}>Sign in to your account</p>
         </div>
-        <div style={{ marginBottom: '10px' }}>
-          <label>Password:</label><br/>
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        <form onSubmit={handleLogin} noValidate>
+          <div style={{ marginBottom: '14px' }}>
+            <label htmlFor="email" style={{ display: 'block', fontSize: '14px', marginBottom: '6px', color: '#374151' }}>Email</label>
+            <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #e5e7eb' }} />
+          </div>
+          <div style={{ marginBottom: '18px' }}>
+            <label htmlFor="password" style={{ display: 'block', fontSize: '14px', marginBottom: '6px', color: '#374151' }}>Password</label>
+            <input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #e5e7eb' }} />
+          </div>
+          <button type="submit" style={{ width: '100%', padding: '12px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 600, cursor: 'pointer' }}>Sign in</button>
+        </form>
+        <div style={{ textAlign: 'center', marginTop: '16px' }}>
+          <p style={{ margin: 0, color: '#6b7280' }}>New here? <Link to="/signup" style={{ color: '#2563eb', textDecoration: 'none' }}>Create Account</Link></p>
         </div>
-        <button type="submit">Login</button>
-      </form>
-      <p>New here? <Link to="/signup">Create Account</Link></p>
+      </div>
     </div>
   );
 }

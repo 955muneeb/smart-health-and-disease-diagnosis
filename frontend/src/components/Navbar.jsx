@@ -16,7 +16,7 @@ const styles = {
     boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
     position: "sticky",
     top: 0,
-    zIndex: 1000
+    zIndex: 1000,
   },
   logo: {
     fontSize: "24px",
@@ -25,12 +25,12 @@ const styles = {
     textDecoration: "none",
     display: "flex",
     alignItems: "center",
-    gap: "10px"
+    gap: "10px",
   },
   menu: {
     display: "flex",
     gap: "20px",
-    alignItems: "center"
+    alignItems: "center",
   },
   link: {
     textDecoration: "none",
@@ -40,7 +40,7 @@ const styles = {
     display: "flex",
     alignItems: "center",
     gap: "8px",
-    transition: "color 0.2s"
+    transition: "color 0.2s",
   },
   // Style for the new Diagnosis Link to make it stand out slightly
   diagnosisLink: {
@@ -62,8 +62,8 @@ const styles = {
     fontWeight: "bold",
     display: "flex",
     alignItems: "center",
-    gap: "5px"
-  }
+    gap: "5px",
+  },
 };
 
 function Navbar() {

@@ -57,6 +57,7 @@ function DoctorList() {
   const navigate = useNavigate();
 
   const [doctors, setDoctors] = useState([]);
+  const [csvDoctors, setCsvDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -84,6 +85,20 @@ function DoctorList() {
       } catch (error) {
         console.error("Error fetching doctors:", error);
       }
+
+      // Always try CSV fallback (so suggestions work even if nobody registered in Firebase)
+      try {
+        const API_BASE =
+          process.env.REACT_APP_API_URL || "http://localhost:8000";
+        const qs = specialty ? `?specialty=${encodeURIComponent(specialty)}` : "";
+        const res = await fetch(`${API_BASE}/doctors${qs}`);
+        const data = await res.json();
+        setCsvDoctors(Array.isArray(data.doctors) ? data.doctors : []);
+      } catch (e) {
+        console.error("Error fetching CSV doctors:", e);
+        setCsvDoctors([]);
+      }
+
       setLoading(false);
     };
 
@@ -98,7 +113,7 @@ function DoctorList() {
 
       {loading ? (
         <p>Loading...</p>
-      ) : doctors.length === 0 ? (
+      ) : doctors.length === 0 && csvDoctors.length === 0 ? (
         <div style={styles.noResult}>
           <p>No doctors found for <b>{specialty}</b> yet.</p>
           <button 
@@ -110,6 +125,7 @@ function DoctorList() {
         </div>
       ) : (
         <div style={styles.grid}>
+          {/* If registered doctors exist in Firebase, show them first */}
           {doctors.map((doc) => (
             <div key={doc.id} style={styles.card}>
               
@@ -141,6 +157,32 @@ function DoctorList() {
                 </button>
               </div>
 
+            </div>
+          ))}
+
+          {/* CSV doctors fallback (no booking profile, but shows correct specialty suggestions) */}
+          {doctors.length === 0 && csvDoctors.map((doc, idx) => (
+            <div key={`${doc.name}-${idx}`} style={styles.card}>
+              <div style={styles.infoSection}>
+                <div style={styles.avatar}>
+                  {(doc.name || "D").charAt(0).toUpperCase()}
+                </div>
+                <div style={styles.details}>
+                  <h3 style={styles.name}>{doc.name}</h3>
+                  <p style={styles.specialty}>{doc.specialty}</p>
+                  <p style={styles.hospital}>📍 {doc.address} • {doc.city}</p>
+                  <p style={styles.stats}>📞 {doc.phone}</p>
+                </div>
+              </div>
+              <div style={styles.actionSection}>
+                <span style={{...styles.price, color: "#6c757d"}}>CSV Suggestion</span>
+                <button
+                  style={{...styles.bookBtn, backgroundColor: "#28a745"}}
+                  onClick={() => window.open(`tel:${doc.phone}`)}
+                >
+                  Call
+                </button>
+              </div>
             </div>
           ))}
         </div>

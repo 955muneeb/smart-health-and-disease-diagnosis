@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 // 1. Added FaTimes for the close button
 import { FaSearch, FaStethoscope, FaHeart, FaTooth, FaBaby, FaBrain, FaFemale, FaBone, FaEye, FaTimes } from "react-icons/fa";
 import { GiStomach, GiKidneys, GiLungs } from "react-icons/gi";
 import { MdPregnantWoman } from "react-icons/md";
+import { auth } from "../../services/firebase";
+import { db } from "../../services/firebase";
+import { doc, getDoc } from "firebase/firestore";
 
 // 🎨 Styles
 const styles = {
@@ -199,9 +202,39 @@ function DoctorSearch() {
   const [searchTerm, setSearchTerm] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
   const [hoverIndex, setHoverIndex] = useState(null);
+  const [name, setName] = useState("");
   
   // 🟢 3. Added State for Modal
   const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      if (!user) {
+        setName("");
+        return;
+      }
+
+      // 1) Prefer Firebase Auth displayName
+      if (user.displayName) {
+        setName(user.displayName);
+        return;
+      }
+
+      // 2) Fallback: Firestore users/{uid}.name (covers older accounts)
+      try {
+        const ref = doc(db, "users", user.uid);
+        const snap = await getDoc(ref);
+        const n = snap.exists() ? snap.data()?.name : "";
+        // last fallback: derive from email prefix
+        const fallback = user.email ? user.email.split("@")[0] : "";
+        setName(n || fallback);
+      } catch (e) {
+        const fallback = user?.email ? user.email.split("@")[0] : "";
+        setName(fallback);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
   const filteredSpecialties = allSpecialties.filter(spec => 
     spec.toLowerCase().includes(searchTerm.toLowerCase())
@@ -214,7 +247,9 @@ function DoctorSearch() {
   return (
     <div style={styles.container}>
       
-      <h2 style={styles.heading}>Find Best Doctor</h2>
+      <h2 style={styles.heading}>
+        {name ? `Hey ${name}, Find Best Doctor` : "Find Best Doctors"}
+      </h2>
 
       {/* --- Search Bar --- */}
       <div style={styles.searchContainer}>
